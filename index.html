@@ -37,6 +37,7 @@
     </div>
     <div class="nav-left">
       <a class="nav-link" href="#" id="nav-submit">submit</a>
+      <a class="nav-link" href="#" id="nav-user-stories">my stories</a>
     </div>
     <div class="nav-right">
       <a class="nav-link" href="#" id="nav-login">login/signup</a>
@@ -52,9 +53,12 @@
     <input id="new-story-url" type="text" placeholder="Enter Story URL">
     <button id="submit-btn">Submit</button>
   </form>
+  <section id="user-stories-container" class="stories-container container hidden">
+    <ol id="own-stories-list" class="stories-list"></ol>
+  </section>
 
   <!-- area for stories (all stories, user stories, favorites) -->
-  <section class="stories-container container">
+  <section id="all-stories-container" class="stories-container container">
 
     <!-- loading message (removed by JS after stories loaded) -->
     <div id="stories-loading-msg">Loading&hellip;</div>

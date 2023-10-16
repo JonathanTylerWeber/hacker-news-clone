@@ -57,11 +57,12 @@ async function createStory(e) {
   e.preventDefault();
   const title = $('#new-story-title').val();
   const url = $('#new-story-url').val();
-  await storyList.addStory(currentUser, { title: title, author: currentUser.name, url: url });
+  const addedStory = await storyList.addStory(currentUser, { title: title, author: currentUser.name, url: url });
   putStoriesOnPage();
   $('#new-story-title').val('');
   $('#new-story-url').val('');
   $('.submit-form').hide();
+  currentUser.ownStories.push(addedStory);
 }
 
 $('#submit-btn').on("click", createStory);

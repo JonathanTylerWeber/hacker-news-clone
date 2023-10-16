@@ -11,6 +11,9 @@ function navAllStories(evt) {
   hidePageComponents();
   $('.submit-form').hide();
   putStoriesOnPage();
+  const userStoriesContainer = document.getElementById('user-stories-container');
+  userStoriesContainer.style.display = 'none';
+  $('#all-stories-container').show();
 }
 
 $body.on("click", "#nav-all", navAllStories);
@@ -37,8 +40,23 @@ function updateNavOnLogin() {
 }
 
 function goToSubmit() {
-  // $('.stories-container').hide();
   $('.submit-form').show();
 }
 
 $('#nav-submit').on("click", goToSubmit);
+
+function goToOwnStories() {
+  $('.submit-form').hide();
+  const userStoriesContainer = document.getElementById('user-stories-container');
+  userStoriesContainer.style.display = 'flex';
+  $('#all-stories-container').hide();
+  let ownStoriesList = $('#own-stories-list');
+  ownStoriesList.empty();
+  for (let story of currentUser.ownStories) {
+    let li = document.createElement('li');
+    li.appendChild(generateStoryMarkup(story)[0]);
+    ownStoriesList.append(li);
+  }
+}
+
+$('#nav-user-stories').on("click", goToOwnStories);
