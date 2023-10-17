@@ -121,6 +121,105 @@ class User {
     this.loginToken = token;
   }
 
+  saveOwnStoriesToLocalStorage() {
+    const ownStoriesJSON = JSON.stringify(this.ownStories);
+    localStorage.setItem('ownStories', ownStoriesJSON);
+  }
+
+  getOwnStoriesFromLocalStorage() {
+    const stories = localStorage.getItem(`${this.username}-ownStories`);
+    if (stories) {
+      this.ownStories = JSON.parse(stories).map(storyData => new Story(storyData));
+    }
+  }
+
+  // toggleFavorite() {
+  //   const star = document.querySelector('i.fa-star');
+
+  //   star.addEventListener('click', (e) => {
+  //     if (star.classList.contains('fa-regular')) {
+  //       star.classList.remove('fa-regular');
+  //       star.classList.add('fa-solid');
+  //     } else if (star.classList.contains('fa-solid')) {
+  //       star.classList.remove('fa-solid');
+  //       star.classList.add('fa-regular');
+  //     }
+  //   });
+  // }
+  toggleFavorite() {
+    const stars = document.querySelectorAll('.fa-star');
+
+    stars.forEach((star) => {
+      star.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent event propagation to parent elements
+
+        if (star.classList.contains('fa-regular')) {
+          star.classList.remove('fa-regular');
+          star.classList.add('fa-solid');
+        } else if (star.classList.contains('fa-solid')) {
+          star.classList.remove('fa-solid');
+          star.classList.add('fa-regular');
+        }
+      });
+    });
+  }
+
+  putFavoritesOnPage() {
+    console.debug("putFavoritesOnPage");
+
+    $favoriteStories.empty();
+
+    // Check if the user has any favorite stories
+    if (currentUser.favorites.length === 0) {
+      $favoriteStories.append('<p>No favorite stories found.</p>');
+    } else {
+      // Loop through the user's favorite stories and generate HTML for them
+      for (let story of currentUser.favorites) {
+        const $story = generateStoryMarkup(story);
+        $favoriteStories.append($story);
+      }
+    }
+
+    $favoriteStories.show();
+  }
+
+  addFavorite(story) {
+    this.favorites.push(story);
+  }
+
+  removeFavorite(story) {
+    this.favorites = this.favorites.filter(favorite => favorite.storyId !== story.storyId);
+  }
+
+  isFavorite(story) {
+    return this.favorites.some(favorite => favorite && favorite.storyId === story.storyId);
+  }
+
+  saveFavoritesToLocalStorage() {
+    const favoritesJSON = JSON.stringify(this.favorites);
+    localStorage.setItem(`${this.username}-favorites`, favoritesJSON);
+  }
+
+  getFavoritesFromLocalStorage() {
+    const favorites = localStorage.getItem(`${this.username}-favorites`);
+    if (favorites) {
+      this.favorites = JSON.parse(favorites).map(storyData => {
+        // Check if storyData is null or undefined
+        if (storyData) {
+          const story = new Story(storyData);
+
+          // Update the star icon class based on the favorite status
+          const isFavorite = this.isFavorite(story);
+          if (isFavorite) {
+            story.starClass = 'fa-solid';
+          }
+
+          return story;
+        }
+      }).filter(story => story); // Filter out any null or undefined values
+    }
+  }
+
   /** Register new user in API, make User instance & return it.
    *
    * - username: a new username

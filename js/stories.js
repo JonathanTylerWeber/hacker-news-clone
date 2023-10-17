@@ -25,6 +25,7 @@ function generateStoryMarkup(story) {
   const hostName = story.getHostName();
   return $(`
       <li id="${story.storyId}">
+        <i class="fa-regular fa-star"></i>
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -46,11 +47,41 @@ function putStoriesOnPage() {
   for (let story of storyList.stories) {
     const $story = generateStoryMarkup(story);
     $allStoriesList.append($story);
+
+    // Check if the story is in the user's favorites
+    const isFavorite = currentUser.isFavorite(story);
+
+    // Update the star icon class based on the favorite status
+    if (isFavorite) {
+      $story.find('.fa-star').removeClass('fa-regular').addClass('fa-solid');
+    }
   }
 
   $allStoriesList.show();
-  console.log('put stories on page');
 
+  // Add event listener to the star icon using event delegation
+  $allStoriesList.on('click', '.fa-star', function () {
+    const $starIcon = $(this);
+    const $story = $starIcon.closest('.story');
+    const storyId = $story.attr('id');
+
+    // Toggle the class on the star icon
+    $starIcon.toggleClass('fa-regular fa-solid');
+
+    // Get the story object from the storyList using the storyId
+    const story = storyList.stories.find(story => story.storyId === storyId);
+
+    // Check if the story is already in the user's favorites
+    const isFavorite = currentUser.isFavorite(story);
+
+    // Add or remove the story from the user's favorites and update localStorage
+    if (isFavorite) {
+      currentUser.removeFavorite(story);
+    } else {
+      currentUser.addFavorite(story);
+    }
+    currentUser.saveFavoritesToLocalStorage();
+  });
 }
 
 async function createStory(e) {
@@ -63,6 +94,7 @@ async function createStory(e) {
   $('#new-story-url').val('');
   $('.submit-form').hide();
   currentUser.ownStories.push(addedStory);
+  currentUser.saveOwnStoriesToLocalStorage();
 }
 
 $('#submit-btn').on("click", createStory);

@@ -10,10 +10,12 @@ function navAllStories(evt) {
   console.debug("navAllStories", evt);
   hidePageComponents();
   $('.submit-form').hide();
+  $('#favorites-container').hide();
   putStoriesOnPage();
   const userStoriesContainer = document.getElementById('user-stories-container');
   userStoriesContainer.style.display = 'none';
   $('#all-stories-container').show();
+  currentUser.toggleFavorite();
 }
 
 $body.on("click", "#nav-all", navAllStories);
@@ -50,13 +52,33 @@ function goToOwnStories() {
   const userStoriesContainer = document.getElementById('user-stories-container');
   userStoriesContainer.style.display = 'flex';
   $('#all-stories-container').hide();
+  $('#favorites-container').hide();
   let ownStoriesList = $('#own-stories-list');
   ownStoriesList.empty();
+  currentUser.getOwnStoriesFromLocalStorage();
   for (let story of currentUser.ownStories) {
     let li = document.createElement('li');
     li.appendChild(generateStoryMarkup(story)[0]);
     ownStoriesList.append(li);
   }
+  currentUser.toggleFavorite();
 }
 
 $('#nav-user-stories').on("click", goToOwnStories);
+
+function goToFavorites() {
+  $('.submit-form').hide();
+  const userStoriesContainer = document.getElementById('user-stories-container');
+  userStoriesContainer.style.display = 'none';
+  $('#favorites-container').show();
+  $('#all-stories-container').hide();
+  let favoritesList = $('#favorites-list');
+  favoritesList.empty();
+  currentUser.getFavoritesFromLocalStorage();
+  currentUser.toggleFavorite();
+}
+
+$('#nav-favorites').on('click', function () {
+  goToFavorites();
+  currentUser.putFavoritesOnPage();
+});
