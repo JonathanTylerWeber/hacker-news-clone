@@ -58,6 +58,7 @@ function goToOwnStories() {
   currentUser.getOwnStoriesFromLocalStorage();
   for (let story of currentUser.ownStories) {
     let li = document.createElement('li');
+    story.storyId = 69;
     li.appendChild(generateStoryMarkup(story)[0]);
     ownStoriesList.append(li);
   }

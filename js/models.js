@@ -146,23 +146,24 @@ class User {
   //     }
   //   });
   // }
-  toggleFavorite() {
-    const stars = document.querySelectorAll('.fa-star');
+  // toggleFavorite() {
+  //   const stars = document.querySelectorAll('.fa-star');
+  //   console.log(stars);
 
-    stars.forEach((star) => {
-      star.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent event propagation to parent elements
+  //   stars.forEach((star) => {
+  //     star.addEventListener('click', (e) => {
+  //       e.stopPropagation(); // Prevent event propagation to parent elements
 
-        if (star.classList.contains('fa-regular')) {
-          star.classList.remove('fa-regular');
-          star.classList.add('fa-solid');
-        } else if (star.classList.contains('fa-solid')) {
-          star.classList.remove('fa-solid');
-          star.classList.add('fa-regular');
-        }
-      });
-    });
-  }
+  //       if (star.classList.contains('fa-regular')) {
+  //         star.classList.remove('fa-regular');
+  //         star.classList.add('fa-solid');
+  //       } else if (star.classList.contains('fa-solid')) {
+  //         star.classList.remove('fa-solid');
+  //         star.classList.add('fa-regular');
+  //       }
+  //     });
+  //   });
+  // }
 
   putFavoritesOnPage() {
     console.debug("putFavoritesOnPage");
@@ -184,7 +185,10 @@ class User {
   }
 
   addFavorite(story) {
+    console.log(this.favorites);
     this.favorites.push(story);
+    console.log(story);
+    console.log(this.favorites);
   }
 
   removeFavorite(story) {
@@ -198,6 +202,8 @@ class User {
   saveFavoritesToLocalStorage() {
     const favoritesJSON = JSON.stringify(this.favorites);
     localStorage.setItem(`${this.username}-favorites`, favoritesJSON);
+    console.log(this.favorites);
+
   }
 
   getFavoritesFromLocalStorage() {
