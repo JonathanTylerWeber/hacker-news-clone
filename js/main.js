@@ -14,6 +14,9 @@ const $navLogin = $("#nav-login");
 const $navUserProfile = $("#nav-user-profile");
 const $navLogOut = $("#nav-logout");
 
+const $userStoriesContainer = $('#user-stories-container');
+const $ownStoriesList = $('#own-stories-list');
+
 /** To make it easier for individual components to show just themselves, this
  * is a useful function that hides pretty much everything on the page. After
  * calling this, individual components can re-show just what they want.
@@ -24,8 +27,10 @@ function hidePageComponents() {
     $allStoriesList,
     $loginForm,
     $signupForm,
+    $userStoriesContainer,
   ];
   components.forEach(c => c.hide());
+  // userStoriesContainer.style.display = 'none';
 }
 
 /** Overall function to kick off the app. */

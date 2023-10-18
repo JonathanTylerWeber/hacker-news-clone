@@ -9,11 +9,8 @@
 function navAllStories(evt) {
   console.debug("navAllStories", evt);
   hidePageComponents();
-  $('.submit-form').hide();
   putStoriesOnPage();
-  const userStoriesContainer = document.getElementById('user-stories-container');
-  userStoriesContainer.style.display = 'none';
-  $('#all-stories-container').show();
+  $allStoriesList.show();
 }
 
 $body.on("click", "#nav-all", navAllStories);
@@ -46,16 +43,14 @@ function goToSubmit() {
 $('#nav-submit').on("click", goToSubmit);
 
 function goToOwnStories() {
-  $('.submit-form').hide();
-  const userStoriesContainer = document.getElementById('user-stories-container');
-  userStoriesContainer.style.display = 'flex';
-  $('#all-stories-container').hide();
-  let ownStoriesList = $('#own-stories-list');
-  ownStoriesList.empty();
-  for (let story of currentUser.ownStories) {
-    let li = document.createElement('li');
-    li.appendChild(generateStoryMarkup(story)[0]);
-    ownStoriesList.append(li);
+  hidePageComponents();
+  $userStoriesContainer[0].style.display = 'flex';
+  // FIXME: above is called instead of the jQuery method 'show()' because 'show()' sets display to block, not sure how else to fix aside from this or creating new function
+  $ownStoriesList.empty();
+  const userLoggedStories = JSON.parse(localStorage.userLoggedStories);
+  for (let storyData of userLoggedStories) {
+    const story = new Story(storyData);
+    $ownStoriesList.append(generateStoryMarkup(story));
   }
 }
 
