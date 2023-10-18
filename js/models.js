@@ -125,6 +125,33 @@ class User {
     this.loginToken = token;
   }
 
+  toggleFavorites() {
+    $(".story-list").on("click", ".fa-star", (event) => {
+      const storyId = $(event.target).closest(".story").attr("id");
+      console.log("Star clicked for story with ID:", storyId);
+
+      const story = storyList.stories.find((story) => story.storyId === storyId);
+
+      if (!story) {
+        console.error("Story not found.");
+        return;
+      }
+
+      if (this.favorites.includes(story)) {
+        this.favorites = this.favorites.filter((favorite) => favorite !== story);
+        $(event.target).removeClass("fa-solid").addClass("fa-regular");
+        console.log("Removed story from favorites", story);
+      } else {
+        this.favorites.push(story);
+        $(event.target).removeClass("fa-regular").addClass("fa-solid");
+        console.log("Added story to favorites", story);
+      }
+
+      // Update local storage with the updated favorites array
+      localStorage.setItem("favorites", JSON.stringify(this.favorites));
+    });
+  }
+
   /** Register new user in API, make User instance & return it.
    *
    * - username: a new username

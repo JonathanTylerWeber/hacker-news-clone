@@ -55,3 +55,19 @@ function goToOwnStories() {
 }
 
 $('#nav-user-stories').on("click", goToOwnStories);
+
+function goToFavorites() {
+  console.log('favorites')
+  hidePageComponents();
+  $favoritesContainer[0].style.display = 'flex';
+  $favoritesList.empty();
+  // FIXME:
+  const userLoggedStories = JSON.parse(localStorage.userLoggedStories);
+  for (let storyData of userLoggedStories) {
+    const story = new Story(storyData);
+    $favoritesList.append(generateStoryMarkup(story));
+  }
+}
+// FIXME:
+
+$('#nav-favorites').on("click", goToFavorites);
