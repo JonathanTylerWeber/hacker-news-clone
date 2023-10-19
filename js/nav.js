@@ -14,18 +14,6 @@ function removeFromFavorites(storyId) {
   console.log(currentUser.favorites);
 }
 
-// function checkFavorites(list, favorites) {
-//   favorites = currentUser.favorites;
-//   const favoritesList = [];
-//   for (let i = 0; i < list.length; i++) {
-//     const story = list[i];
-//     if (favorites.includes(story.storyId)) {
-//       favoritesList.push(story);
-//     }
-//   }
-//   return favoritesList;
-// }
-
 /** Show main list of all stories when click site name */
 
 function navAllStories(evt) {
@@ -34,7 +22,7 @@ function navAllStories(evt) {
   putStoriesOnPage();
 
   $allStoriesList.show();
-  currentUser.addFavoritesEventListeners();
+  currentUser.toggleFavorites();
 }
 
 $body.on("click", "#nav-all", navAllStories);
@@ -58,7 +46,7 @@ function updateNavOnLogin() {
   $navLogin.hide();
   $navLogOut.show();
   $navUserProfile.text(`${currentUser.username}`).show();
-  currentUser.addFavoritesEventListeners();
+  currentUser.toggleFavorites();
 }
 
 function goToSubmit() {
@@ -74,27 +62,34 @@ function goToOwnStories() {
   $ownStoriesList.empty();
   const userLoggedStories = JSON.parse(localStorage.userLoggedStories);
   for (let storyData of userLoggedStories) {
+    console.log(storyData);
     const story = new Story(storyData);
+    console.log(story);
     $ownStoriesList.append(generateStoryMarkup(story));
   }
-  currentUser.addFavoritesEventListeners();
+  currentUser.toggleFavorites();
 }
 
 $('#nav-user-stories').on("click", goToOwnStories);
 
 function goToFavorites() {
-  console.log('favorites')
+  console.log('favorites');
   hidePageComponents();
   $favoritesContainer[0].style.display = 'flex';
   // FIXME: above is called instead of the jQuery method 'show()' because 'show()' sets display to block, not sure how else to fix aside from this or creating new function
   $favoritesList.empty();
-  const storedFavorites = JSON.parse(localStorage.favorites);
-  for (let storyData of storedFavorites) {
-    const story = new Story(storyData);
-    $favoritesList.append(generateStoryMarkup(story));
-  }
-  currentUser.addFavoritesEventListeners();
+  const favorites = JSON.parse(localStorage.getItem('favorites'));
+  const allStoriesList = document.querySelector('#all-stories-list');
+  const listItems = allStoriesList.querySelectorAll('li');
+  listItems.forEach((listItem) => {
+    const storyId = listItem.id;
+    if (favorites.includes(storyId)) {
+      $favoritesList.append(listItem);
+    }
+  });
+  currentUser.toggleFavorites();
 }
+
 
 $('#nav-favorites').on("click", goToFavorites);
 

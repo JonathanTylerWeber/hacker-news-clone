@@ -126,56 +126,8 @@ class User {
     this.loginToken = token;
   }
 
-  // toggleFavorites() {
-  //   console.log('favorites event listener on');
-  //   $(".story-list").on("click", ".fa-star", (event) => {
-  //     const storyId = $(event.target).closest(".story").attr("id");
-  //     console.log("Star clicked for story with ID:", storyId);
-
-  //     const story = storyList.stories.find((story) => story.storyId === storyId);
-
-  //     if (!story) {
-  //       console.error("Story not found.");
-  //       return;
-  //     }
-
-  //     if (this.favorites.includes(story)) {
-  //       this.favorites = this.favorites.filter((favorite) => favorite !== story);
-  //       $(event.target).removeClass("fa-solid").addClass("fa-regular");
-  //       const storedFavorites = JSON.parse(localStorage.getItem("favorites"));
-  //       const updatedFavorites = storedFavorites.filter(
-  //         (favorite) => favorite.storyId !== story.storyId
-  //       );
-  //       localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
-  //       console.log("Removed story from favorites", story);
-  //     } else {
-  //       this.favorites.push(story);
-  //       $(event.target).removeClass("fa-regular").addClass("fa-solid");
-  //       console.log("Added story to favorites", story);
-  //     }
-
-  //     localStorage.setItem("favorites", JSON.stringify(this.favorites));
-  //   });
-  // }
-
-  // test() {
-  //   document.addEventListener('click', function (e) {
-  //     if (e.target.matches('.stories-list i')) {
-  //       console.log('You clicked a star!');
-  //       console.log(e.target);
-  //       console.log(e.target.parentNode);
-  //       console.log(e.target.parentNode.id);
-  //     }
-  //   })
-  // };
-
-  // addToFavorites(favorite) {
-  //   this.favorites.push(favorite);
-  // }
-
-  addFavoritesEventListeners() {
+  toggleFavorites() {
     const stars = document.querySelectorAll('.fa-star');
-    // console.log('stars: ', stars);
     for (let i = 0; i < stars.length; i++) {
       const star = stars[i];
       const storyId = star.parentNode.id;
@@ -204,23 +156,6 @@ class User {
       });
     }
   };
-
-
-
-  toggleFavorite() {
-    document.addEventListener('click', function (e) {
-      console.log(e.target);
-      console.log(e.target.parentNode);
-      console.log(e.target.parentNode.id);
-      if (currentUser.ownStories.map(story => story.storyId).includes(e.target.parentNode.id)) {
-        console.log('you posted this');
-        console.log(e.target.story);
-      }
-      else {
-        console.log('someone else posted this');
-      }
-    })
-  }
 
   /** Register new user in API, make User instance & return it.
    *
