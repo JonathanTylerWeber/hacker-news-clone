@@ -178,8 +178,17 @@ class User {
     // console.log('stars: ', stars);
     for (let i = 0; i < stars.length; i++) {
       const star = stars[i];
+      const storyId = star.parentNode.id;
+      const favorites = JSON.parse(localStorage.getItem('favorites'));
+      if (favorites.includes(storyId)) {
+        star.classList.add('fa-solid');
+        star.classList.remove('fa-regular');
+      }
+      else {
+        star.classList.add('fa-regular');
+        star.classList.remove('fa-solid');
+      }
       star.addEventListener('click', function (e) {
-        const storyId = e.target.parentNode.id;
         if (e.target.classList.contains('fa-regular')) {
           e.target.classList.remove('fa-regular');
           e.target.classList.add('fa-solid');

@@ -14,16 +14,17 @@ function removeFromFavorites(storyId) {
   console.log(currentUser.favorites);
 }
 
-function checkFavorites(storyList, favorites) {
-  favorites = currentUser.favorites;
-  const favoritesList = [];
-  for (let i = 0; i < storyList.length; i++) {
-    const story = storyList[i];
-    if (favorites.includes(story.storyId)) {
-      favoritesList.push(story);
-    }
-  }
-}
+// function checkFavorites(list, favorites) {
+//   favorites = currentUser.favorites;
+//   const favoritesList = [];
+//   for (let i = 0; i < list.length; i++) {
+//     const story = list[i];
+//     if (favorites.includes(story.storyId)) {
+//       favoritesList.push(story);
+//     }
+//   }
+//   return favoritesList;
+// }
 
 /** Show main list of all stories when click site name */
 
