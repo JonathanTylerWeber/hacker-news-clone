@@ -61,8 +61,8 @@ async function createStory(e) {
   putStoriesOnPage();
   $('#new-story-title').val('');
   $('#new-story-url').val('');
-  $('.submit-form').hide();
-  currentUser.ownStories.push(addedStory);
+  $submitForm.hide();
+  currentUser.ownStories.unshift(addedStory);
   console.log(currentUser.ownStories);
   localStorage.setItem('userLoggedStories', JSON.stringify(currentUser.ownStories));
 }

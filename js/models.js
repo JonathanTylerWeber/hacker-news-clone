@@ -87,6 +87,7 @@ class StoryList {
       }
     };
     const response = await axios.post(`${BASE_URL}/stories`, requestBody);
+    console.log(response);
     const { storyId, title, author, url, username, createdAt } = response.data.story;
     const addedStory = new Story({ storyId, title, author, url, username, createdAt });
     this.stories.unshift(addedStory);
@@ -125,31 +126,91 @@ class User {
     this.loginToken = token;
   }
 
-  toggleFavorites() {
-    $(".story-list").on("click", ".fa-star", (event) => {
-      const storyId = $(event.target).closest(".story").attr("id");
-      console.log("Star clicked for story with ID:", storyId);
+  // toggleFavorites() {
+  //   console.log('favorites event listener on');
+  //   $(".story-list").on("click", ".fa-star", (event) => {
+  //     const storyId = $(event.target).closest(".story").attr("id");
+  //     console.log("Star clicked for story with ID:", storyId);
 
-      const story = storyList.stories.find((story) => story.storyId === storyId);
+  //     const story = storyList.stories.find((story) => story.storyId === storyId);
 
-      if (!story) {
-        console.error("Story not found.");
-        return;
+  //     if (!story) {
+  //       console.error("Story not found.");
+  //       return;
+  //     }
+
+  //     if (this.favorites.includes(story)) {
+  //       this.favorites = this.favorites.filter((favorite) => favorite !== story);
+  //       $(event.target).removeClass("fa-solid").addClass("fa-regular");
+  //       const storedFavorites = JSON.parse(localStorage.getItem("favorites"));
+  //       const updatedFavorites = storedFavorites.filter(
+  //         (favorite) => favorite.storyId !== story.storyId
+  //       );
+  //       localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+  //       console.log("Removed story from favorites", story);
+  //     } else {
+  //       this.favorites.push(story);
+  //       $(event.target).removeClass("fa-regular").addClass("fa-solid");
+  //       console.log("Added story to favorites", story);
+  //     }
+
+  //     localStorage.setItem("favorites", JSON.stringify(this.favorites));
+  //   });
+  // }
+
+  // test() {
+  //   document.addEventListener('click', function (e) {
+  //     if (e.target.matches('.stories-list i')) {
+  //       console.log('You clicked a star!');
+  //       console.log(e.target);
+  //       console.log(e.target.parentNode);
+  //       console.log(e.target.parentNode.id);
+  //     }
+  //   })
+  // };
+
+  // addToFavorites(favorite) {
+  //   this.favorites.push(favorite);
+  // }
+
+  addFavoritesEventListeners() {
+    const stars = document.querySelectorAll('.fa-star');
+    // console.log('stars: ', stars);
+    for (let i = 0; i < stars.length; i++) {
+      const star = stars[i];
+      star.addEventListener('click', function (e) {
+        const storyId = e.target.parentNode.id;
+        if (e.target.classList.contains('fa-regular')) {
+          e.target.classList.remove('fa-regular');
+          e.target.classList.add('fa-solid');
+          addToFavorites(storyId);
+          localStorage.setItem('favorites', JSON.stringify(currentUser.favorites));
+        }
+        else {
+          e.target.classList.remove('fa-solid');
+          e.target.classList.add('fa-regular');
+          removeFromFavorites(storyId);
+          localStorage.setItem('favorites', JSON.stringify(currentUser.favorites));
+        }
+      });
+    }
+  };
+
+
+
+  toggleFavorite() {
+    document.addEventListener('click', function (e) {
+      console.log(e.target);
+      console.log(e.target.parentNode);
+      console.log(e.target.parentNode.id);
+      if (currentUser.ownStories.map(story => story.storyId).includes(e.target.parentNode.id)) {
+        console.log('you posted this');
+        console.log(e.target.story);
       }
-
-      if (this.favorites.includes(story)) {
-        this.favorites = this.favorites.filter((favorite) => favorite !== story);
-        $(event.target).removeClass("fa-solid").addClass("fa-regular");
-        console.log("Removed story from favorites", story);
-      } else {
-        this.favorites.push(story);
-        $(event.target).removeClass("fa-regular").addClass("fa-solid");
-        console.log("Added story to favorites", story);
+      else {
+        console.log('someone else posted this');
       }
-
-      // Update local storage with the updated favorites array
-      localStorage.setItem("favorites", JSON.stringify(this.favorites));
-    });
+    })
   }
 
   /** Register new user in API, make User instance & return it.
