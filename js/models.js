@@ -128,10 +128,11 @@ class User {
 
   toggleFavorites() {
     const stars = document.querySelectorAll('.fa-star');
+    const favorites = JSON.parse(localStorage.getItem('favorites'));
+    currentUser.favorites = favorites;
     for (let i = 0; i < stars.length; i++) {
       const star = stars[i];
       const storyId = star.parentNode.id;
-      const favorites = JSON.parse(localStorage.getItem('favorites'));
       if (favorites.includes(storyId)) {
         star.classList.add('fa-solid');
         star.classList.remove('fa-regular');
