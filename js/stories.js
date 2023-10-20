@@ -32,6 +32,7 @@ function generateStoryMarkup(story) {
         <small class="story-hostname">(${hostName})</small>
         <small class="story-author">by ${story.author}</small>
         <small class="story-user">posted by ${story.username}</small>
+        <hr>
       </li>
     `);
 }
@@ -60,6 +61,7 @@ async function createStory(e) {
   $('#new-story-title').val('');
   $('#new-story-url').val('');
   $('.submit-form').hide();
+  navAllStories();
 }
 
 $('#submit-btn').on("click", createStory);

@@ -88,6 +88,10 @@ class StoryList {
     this.stories.unshift(addedStory);
     return addedStory;
   }
+
+  removeStory(storyId) {
+    this.stories = this.stories.filter(story => story.storyId !== storyId);
+  }
 }
 
 
@@ -119,6 +123,39 @@ class User {
 
     // store the login token on the user so it's easy to find for API calls.
     this.loginToken = token;
+  }
+
+  async getOwnStories() {
+    const username = currentUser.username;
+    const token = currentUser.loginToken;
+    const response = await axios.get(`${BASE_URL}/users/${username}?token=${token}`);
+    // console.log(response.data.user.stories);
+    const userStories = response.data.user.stories;
+    const listItems = document.querySelectorAll('li');
+    listItems.forEach(item => {
+      // console.log(item.id);
+      const itemId = item.id;
+      const isOwn = userStories.some(story => story.storyId === itemId);
+      if (isOwn) {
+        const icon = document.createElement('i');
+        icon.classList.add('fa-solid', 'fa-trash-can');
+        const hrElement = item.querySelector('hr');
+        item.insertBefore(icon, hrElement);
+        icon.addEventListener('click', this.removeOwnStory);
+      }
+    });
+  }
+
+  async removeOwnStory() {
+    const storyId = this.parentNode.id;
+    const requestBody = {
+      token: currentUser.loginToken,
+    };
+    this.parentNode.remove();
+    await axios.delete(`${BASE_URL}/stories/${storyId}`, {
+      data: requestBody
+    });
+    storyList.removeStory(storyId);
   }
 
   async toggleFavorites() {

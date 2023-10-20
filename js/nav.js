@@ -12,6 +12,7 @@ async function navAllStories(evt) {
   $('.submit-form').hide();
   putStoriesOnPage();
   await currentUser.toggleFavorites();
+  await currentUser.getOwnStories();
 }
 
 $body.on("click", "#nav-all", navAllStories);
@@ -36,9 +37,11 @@ async function updateNavOnLogin() {
   $navLogOut.show();
   $navUserProfile.text(`${currentUser.username}`).show();
   await currentUser.toggleFavorites();
+  await currentUser.getOwnStories();
 }
 
 function goToSubmit() {
+  hidePageComponents();
   $('.submit-form').show();
 }
 
@@ -56,6 +59,7 @@ async function goToFavorites() {
     $favoritesList.append($story);
   };
   await currentUser.toggleFavorites();
+  await currentUser.getOwnStories();
 }
 
 $('#nav-favorites').on('click', goToFavorites);
