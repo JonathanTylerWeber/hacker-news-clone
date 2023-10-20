@@ -135,8 +135,6 @@ class User {
         star.classList.add('fa-regular');
       }
       star.addEventListener('click', async function () {
-        console.log('you clicked a star');
-        console.log(this.parentNode);
         if (this.classList.contains('fa-regular')) {
           this.classList.remove('fa-regular');
           this.classList.add('fa-solid');
@@ -158,7 +156,6 @@ class User {
     const token = currentUser.loginToken;
     const response = await axios.get(`${BASE_URL}/users/${username}?token=${token}`);
     const favorites = response.data.user.favorites
-    console.log(favorites);
     return favorites;
   }
 
@@ -169,7 +166,6 @@ class User {
       token: currentUser.loginToken,
     };
     const response = await axios.post(`${BASE_URL}/users/${username}/favorites/${storyId}`, requestBody);
-    console.log(response);
   }
 
   async removeFavoriteFromApi(star) {
@@ -181,7 +177,6 @@ class User {
     const response = await axios.delete(`${BASE_URL}/users/${username}/favorites/${storyId}`, {
       data: requestBody
     });
-    console.log(response);
   }
 
   /** Register new user in API, make User instance & return it.

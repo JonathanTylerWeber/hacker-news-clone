@@ -53,7 +53,6 @@ async function goToFavorites() {
     const { storyId, title, author, url, username, createdAt } = favorite;
     const favoriteStory = new Story({ storyId, title, author, url, username, createdAt });
     const $story = (generateStoryMarkup(favoriteStory));
-    console.log($story);
     $favoritesList.append($story);
   };
   await currentUser.toggleFavorites();

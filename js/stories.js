@@ -48,10 +48,7 @@ function putStoriesOnPage() {
     const $story = generateStoryMarkup(story);
     $allStoriesList.append($story);
   }
-
   $allStoriesList.show();
-  console.log('put stories on page');
-
 }
 
 async function createStory(e) {
