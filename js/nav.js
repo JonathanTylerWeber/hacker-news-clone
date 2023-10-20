@@ -6,11 +6,12 @@
 
 /** Show main list of all stories when click site name */
 
-function navAllStories(evt) {
+async function navAllStories(evt) {
   console.debug("navAllStories", evt);
   hidePageComponents();
   $('.submit-form').hide();
   putStoriesOnPage();
+  await currentUser.toggleFavorites();
 }
 
 $body.on("click", "#nav-all", navAllStories);
@@ -28,17 +29,34 @@ $navLogin.on("click", navLoginClick);
 
 /** When a user first logins in, update the navbar to reflect that. */
 
-function updateNavOnLogin() {
+async function updateNavOnLogin() {
   console.debug("updateNavOnLogin");
   $(".main-nav-links").show();
   $navLogin.hide();
   $navLogOut.show();
   $navUserProfile.text(`${currentUser.username}`).show();
+  await currentUser.toggleFavorites();
 }
 
 function goToSubmit() {
-  // $('.stories-container').hide();
   $('.submit-form').show();
 }
 
 $('#nav-submit').on("click", goToSubmit);
+
+async function goToFavorites() {
+  hidePageComponents();
+  $favoritesList.empty();
+  $favoritesList.show();
+  const favorites = await currentUser.getFavorites();
+  for (let favorite of favorites) {
+    const { storyId, title, author, url, username, createdAt } = favorite;
+    const favoriteStory = new Story({ storyId, title, author, url, username, createdAt });
+    const $story = (generateStoryMarkup(favoriteStory));
+    console.log($story);
+    $favoritesList.append($story);
+  };
+  await currentUser.toggleFavorites();
+}
+
+$('#nav-favorites').on('click', goToFavorites);

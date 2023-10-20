@@ -24,8 +24,8 @@ class Story {
   /** Parses hostname out of URL and returns it. */
 
   getHostName() {
-    // UNIMPLEMENTED: complete this function!
-    return "hostname.com";
+    const url = new URL(this.url);
+    return url.hostname;
   }
 }
 
@@ -119,6 +119,69 @@ class User {
 
     // store the login token on the user so it's easy to find for API calls.
     this.loginToken = token;
+  }
+
+  async toggleFavorites() {
+    const savedFavorites = await this.getFavorites();
+    const stars = document.querySelectorAll('.fa-star');
+    stars.forEach(star => {
+      const storyId = star.parentNode.id;
+      const isFavorited = savedFavorites.some(favorite => favorite.storyId === storyId);
+      if (isFavorited) {
+        star.classList.remove('fa-regular');
+        star.classList.add('fa-solid');
+      } else {
+        star.classList.remove('fa-solid');
+        star.classList.add('fa-regular');
+      }
+      star.addEventListener('click', async function () {
+        console.log('you clicked a star');
+        console.log(this.parentNode);
+        if (this.classList.contains('fa-regular')) {
+          this.classList.remove('fa-regular');
+          this.classList.add('fa-solid');
+          await currentUser.addFavoriteToApi(star);
+          // console.log('add to favs');
+        }
+        else {
+          this.classList.remove('fa-solid');
+          this.classList.add('fa-regular');
+          await currentUser.removeFavoriteFromApi(star);
+          // console.log('remove from favs');
+        }
+      });
+    });
+  };
+
+  async getFavorites() {
+    const username = currentUser.username;
+    const token = currentUser.loginToken;
+    const response = await axios.get(`${BASE_URL}/users/${username}?token=${token}`);
+    const favorites = response.data.user.favorites
+    console.log(favorites);
+    return favorites;
+  }
+
+  async addFavoriteToApi(star) {
+    const username = currentUser.username;
+    const storyId = star.parentNode.id;
+    const requestBody = {
+      token: currentUser.loginToken,
+    };
+    const response = await axios.post(`${BASE_URL}/users/${username}/favorites/${storyId}`, requestBody);
+    console.log(response);
+  }
+
+  async removeFavoriteFromApi(star) {
+    const username = currentUser.username;
+    const storyId = star.parentNode.id;
+    const requestBody = {
+      token: currentUser.loginToken,
+    };
+    const response = await axios.delete(`${BASE_URL}/users/${username}/favorites/${storyId}`, {
+      data: requestBody
+    });
+    console.log(response);
   }
 
   /** Register new user in API, make User instance & return it.
